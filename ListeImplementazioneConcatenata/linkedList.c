@@ -6,34 +6,40 @@
  * Returns the updated pointer to the first element of the list.
  */
 LLElement * LLInsertAtBeginning(LLElement * first, int key) {
-    LLElement * new;
-    new = (LLElement *)malloc(sizeof(LLElement));
-    if(new != NULL) {
-        new->next = first;
-        new->key = key;
-        first = new;
+    LLElement * nuovo;
+    nuovo = (LLElement *)malloc(sizeof(LLElement));
+    
+    if(nuovo != NULL){
+        nuovo->next = first;
+        nuovo->key = key;
+        first = nuovo; 
     }
+    
     return first;
-}
+} //-1
 
 /*
  * Inserts the new key at the end of the list.
  * Returns the updated pointer to the first element of the list.
  */
 LLElement * LLInsertAtEnd(LLElement * first, int key) {
-    LLElement * new;
-    LLElement ** temp;
-    new = (LLElement *)malloc(sizeof(LLElement));
-    if(new != NULL) {
-        temp = &first;
-        while(*temp != NULL)
-            temp = &((*temp)->next);
-        new->next = NULL;
-        new->key = key;
-        *temp = new;
+    LLElement * nuovo;
+    nuovo = (LLElement *)malloc(sizeof(LLElement));
+    
+    LLElement **scorri;
+    scorri = &first;
+    if(nuovo != NULL){
+
+        while((*scorri) != NULL){
+            scorri = &((*scorri)->next);
+        }
+        nuovo->next = NULL;
+        nuovo->key = key;
+        *scorri = nuovo;
     }
+    
     return first;
-}
+} // -1
 
 /*
  * Inserts the new key at the specified positon of the list.
@@ -43,95 +49,113 @@ LLElement * LLInsertAtEnd(LLElement * first, int key) {
  * Returns the updated pointer to the first element of the list.
  */
 LLElement * LLInsertAtPosition(LLElement * first, int key, int position) {
-    LLElement * new;
-    LLElement ** temp;
+    
+    LLElement * nuovo;
+    nuovo = (LLElement *)malloc(sizeof(LLElement));
+    
+    LLElement ** scorri;
+    scorri = &first;
     int i;
-    new = (LLElement *)malloc(sizeof(LLElement));
-    if(new != NULL) {
-        temp = &first;
-        for(i=0; i<position; i++)
-            temp = &((*temp)->next);
-        new->next = *temp;
-        new->key = key;
-        *temp = new;
+    
+    if(nuovo != NULL){
+        for(i=0; i<position ; i++){
+            scorri = &((*scorri)->next);
+        }
+        nuovo->next = *scorri;
+        nuovo->key = key;
+        *scorri = nuovo; 
     }
     return first;
-}
+} //-1
 
 /*
  * Returns the size of the list.
  */
 int LLSize(LLElement * first) {
-    int r = 0;
-    while(first != NULL) {
-        r++;
+    int size = 0;
+       
+    while(first != NULL){
+        size++;
         first = first->next;
     }
-    return r;
-}   
+    
+    return size;
+}   //-1
 
 /*
  * Returns the key at the specified position.
  */ 
 int LLGetKey(LLElement * first, int position) {
     int i;
-    for(i=0; i<position; i++) {
+
+    for(i=0; i<position ; i++){
         first = first->next;
     }
+    
     return first->key;
-}
+} //-1
 
 /*
  * Returns the position of the first element, starting from startPosition, that
  * has the specified key.
  * Returns -1 if not found. 
  */ 
-int LLFindKey(LLElement * first, int key, int startPosition) {
-    int r = -1;
+int LLFindKey(LLElement * first, int key, int startPosition) {    
     int i;
-    for(i=0; i<startPosition; i++) {
+    
+    for(i=0; i<startPosition; i++){
         first = first->next;
     }
-    while(first != NULL && r == -1) {
-        if(first->key == key) {
-            r = i;
+    
+    while(first != NULL){
+        if(first->key == key){
+            return i;
+        }else{
+            first = first->next;
+            i++;
         }
-        first = first->next;
-        i++;
     }
-    return r;
-}
+    
+    return -1;
+} //-1
 
 /*
  * Remove the first element of the list.
  * Returns the updated pointer to the first element of the list.
  */
 LLElement * LLRemoveFirst(LLElement * first) {
-    LLElement * temp;
-    if(first != NULL) {
-        temp = first;
+    LLElement * ultimo = NULL;
+    
+    if(first != NULL){
+        ultimo = first;
         first = first->next;
-        free(temp);
+        free(ultimo);
+    }else{
+        printf("La lista Ã¨ vuota \n");
     }
+    
     return first;
-}
+} //-1
 
 /*
  * Remove the last element of the list.
  * Returns the updated pointer to the first element of the list.
  */
 LLElement * LLRemoveLast(LLElement * first) {
-    LLElement **temp;
-    if(first != NULL) {
-        temp = &first;
-        while((*temp)->next != NULL) {
-                temp = &((*temp)->next);
-            }
-        free(*temp);
-        *temp = NULL;
+        
+    LLElement **scorri;
+    
+    if(first != NULL){
+        scorri = &first;
+        while((*scorri)->next != NULL){
+            scorri = &((*scorri)->next);
+        }
+        free(*scorri);
+        *scorri = NULL;
     }
+    
     return first;
-}
+} //-1
 
 /*
  * Remove the element at the specified position.
@@ -141,30 +165,36 @@ LLElement * LLRemoveLast(LLElement * first) {
  * Returns the updated pointer to the first element of the list.
  */
 LLElement * LLRemoveAtPosition(LLElement * first, int position) {
-    LLElement ** temp;
-    LLElement * pDelete;
+    
+    LLElement ** scorri;
+    LLElement * elimina;
+    
     int i;
     
-    temp = &first;
-    for(i=0; i<position; i++)
-        temp = &((*temp)->next);
-    
-    pDelete = *temp;
-    if((*temp)->next != NULL) {
-        *temp = (*temp)->next;
+    if(first != NULL){
+        scorri = &first;
+        for(i=0; i<position && *scorri!=NULL; i++){
+            scorri = &((*scorri)->next);
+        }
+        
+        if(*scorri != NULL){
+            elimina = *scorri;
+            *scorri = (*scorri)->next;
+        }
+        
+        free( elimina );
     }
-    free(pDelete);
-    
     return first;
-}
-
+} //-1
+        
 /* Empties the list */
 LLElement * LLEmptyList(LLElement *first) {
-    LLElement *temp;
+    LLElement *elimina;
     while(first != NULL) {
-        temp = first;
+        elimina = first;
         first = first->next;
-        free(temp);
+        free(elimina);
     }
-    return NULL;
-}
+    first = NULL;
+    return first;
+} //-1
